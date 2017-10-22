@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wangzhixuan.mapper.FilesMapper">
+
+    <resultMap id="filesVoResultMap" type="com.wangzhixuan.model.vo.FilesVo">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="name" property="name" jdbcType="VARCHAR"/>
+        <result column="account" property="account" jdbcType="VARCHAR"/>
+        <result column="filesize" property="filesize" jdbcType="VARCHAR"/>
+        <result column="creattime" property="creattime" jdbcType="TIMESTAMP"/>
+        <result column="url" property="url" jdbcType="VARCHAR"/>
+        <result column="visitorNum" property="visitorNum" jdbcType="VARCHAR"/>
+        <result column="path" property="path" jdbcType="VARCHAR"/>
+        <result column="url" property="url" jdbcType="VARCHAR"/>
+        <result column="uid" property="uid" jdbcType="VARCHAR"/>
+        <result column="type" property="type" jdbcType="VARCHAR"/>
+        <result column="isdeleted" property="isdeleted" jdbcType="VARCHAR"/>
+
+
+        <collection property="filesList" ofType="Files">
+            <id column="filesId" property="id"/>
+            <result column="name" property="name"/>
+        </collection>
+    </resultMap>
+
+
+    <select id="selectFilesPage" resultType="Map">
+        SELECT
+        t.id, t.name ,t.type, ft.name as types,  t.account, t.creattime, t.url, t.visitor_num, t.path, t.uid , t.isdeleted   FROM files t
+       left join  files_type ft on t.type=ft.code
+        <where>
+            <if test=" name != null and name != '' ">
+                   t.name LIKE  '%${name}%'
+            </if>
+            <if test=" account!= null and account != '' ">
+                   t.account LIKE '%${account}%'
+            </if>
+            <if test=" type!= null and type != '' ">
+                  t.type =  #{type}
+            </if>
+
+
+        </where>
+        GROUP BY t.id
+    </select>
+
+</mapper>
